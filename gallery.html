@@ -4,38 +4,109 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Concept Site</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
   <style>
-    body {
+    :root {
+      --bg: #FFFFFF;
+      --text: #0F1115;
+      --text-muted: #555E6D;
+      --accent: #062B30;
+      --glass: rgba(255, 255, 255, 1);
+      --bg-card: #FFFFFF;
+      --focus-ring: #2563EB;
+      --btn-bg: #63AFAD;
+      --btn-border: #475C65;
+    }
+
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: "Montserrat", sans-serif;
+      font-weight: 400;
+      background: var(--glass);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
-      flex-direction: column;
       justify-content: center;
       align-items: center;
-      padding: 20px;
-      font-family: sans-serif;
+      padding: 24px;
     }
-    ul {
-      padding-left: 20px;
+
+    a:focus-visible {
+      outline: 2px solid var(--focus-ring);
+      outline-offset: 3px;
     }
-    li {
+
+    .concept-card {
+      background-color: var(--bg-card);
+      max-width: 520px;
+      width: 100%;
+      border: 3px solid var(--btn-border);
+      border-radius: 24px;
+      padding: 44px 36px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(6, 43, 48, 0.4);
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      line-height: 1.35;
+      font-weight: 700;
       margin-bottom: 12px;
+      color: var(--text);
     }
-    a {
-      display: inline-block;
-      padding: 12px 0;
-      font-size: 1.2rem;
+
+    p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 28px;
+    }
+
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 14px 24px;
+      border-radius: 50px;
+      background: var(--btn-bg);
+      color: var(--text);
+      border: 2px solid var(--btn-border);
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      transition: opacity 0.25s ease, transform 0.2s ease;
+    }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-2px);
     }
   </style>
 </head>
 <body>
-  <main>
+  <main class="concept-card">
     <h1>This is a concept site, so I have not made all the pages yet.</h1>
     <p>These are the pages I have made:</p>
-    <ul>
-      <li><a href="index.html">Main Page</a></li>
-      <li><a href="quote.html">Get Quote Page</a></li>
-    </ul>
+    <div class="button-group">
+      <a href="index.html" class="btn">Main Page</a>
+      <a href="quote.html" class="btn">Get Quote Page</a>
+    </div>
   </main>
 </body>
 </html>
