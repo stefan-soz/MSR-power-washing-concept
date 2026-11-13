@@ -1,0 +1,4241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>MSR Power Washing | King George, VA</title>
+ 
+   <link rel="icon" type="image/x-icon" href="favicon.ico">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<style>
+html {
+  scroll-behavior: smooth; 
+  scroll-padding-top: 110px; /* Accounts for header height + spacing */
+}
+
+/* ================= SYSTEM DESIGN TOKENS ================= */
+:root {
+  --bg: #FFFFFF;
+  --text: #0F1115;
+  --text-muted: #555E6D;
+  --text-social: #555E6D;
+  --accent: #062B30;           
+  --accent-hover: #093f47;        
+  --steel: rgba(48, 60, 86, .25);
+  --glass: rgba(6, 43, 48, 1);
+  --glass-scrolled: rgba(6, 43, 48, 1);
+  --border: rgba(255, 255, 255, .2);
+  --bg-card: #FFFFFF;
+  --focus-ring: #2563EB;
+  
+  /* DESKTOP BUTTON TOKENS */
+  --btn-bg: #63AFAD;
+  --btn-border: #475C65;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 400;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+body.lock-scroll {
+  overflow: hidden;
+}
+
+/* ================= ACCESSIBILITY FOCUS STATES ================= */
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 3px;
+}
+
+/* ================= FLOATING PILL HEADER ================= */
+#mainHeader {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 40px);
+
+  z-index: 9999;
+  background: var(--glass);
+  border: 3px solid var(--btn-border);
+  border-radius: 9999px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  height: 84px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: 0 10px 30px rgba(6, 43, 48, 0.25);
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1), top 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+#mainHeader.scrolled {
+  top: 12px;
+  height: 68px;
+  background: var(--glass-scrolled);
+  box-shadow: 0 12px 36px rgba(6, 43, 48, 0.35);
+}
+
+/* ================= HEADER INNER ================= */
+.header-inner {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 28px 0 0;
+  position: relative;
+  transition: padding 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.logo {
+  display: inline-flex;
+  align-items: flex-start;
+  text-decoration: none;
+  height: 100%;
+  position: relative;
+  overflow: visible;
+  border-radius: 9999px 0 0 9999px;
+}
+
+/* Square Logo Sizing Rules */
+.logo-img {
+  height: calc(100% + 6px);
+  width: auto;
+  object-fit: contain;
+  object-position: left top;
+  display: block;
+  transition: height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#mainHeader.scrolled .logo-img {
+  height: calc(100% + 6px);
+}
+
+/* ================= DESKTOP NAV ================= */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+}
+
+.desktop-nav > ul {
+  display: flex;
+  gap: 8px;
+  list-style: none;
+  align-items: center;
+}
+
+.desktop-nav > ul > li {
+  position: relative;
+}
+
+.desktop-nav a {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  padding: 8px 14px;
+  border-radius: 50px;
+  transition: color .2s ease, background-color .2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.desktop-nav > ul > li:hover > a,
+.desktop-nav > ul > li:focus-within > a {
+  color: #FFFFFF;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.arrow-icon {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.desktop-nav li:hover .arrow-icon,
+.desktop-nav li:focus-within .arrow-icon {
+  transform: rotate(180deg);
+}
+
+/* DROPDOWN MENU */
+.desktop-nav .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: var(--bg-card);
+  border: 1px solid rgba(15, 17, 21, .12);
+  border-radius: 16px;
+  padding: 8px;
+  list-style: none;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px);
+  transition: opacity .25s ease, transform .25s ease, visibility .25s ease;
+  box-shadow: 0 12px 32px rgba(15, 17, 21, 0.12);
+  z-index: 10;
+  min-width: 240px;
+}
+
+.desktop-nav li:hover > .dropdown-menu,
+.desktop-nav li:focus-within > .dropdown-menu {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(8px);
+}
+
+.desktop-nav .dropdown-menu a {
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-transform: none;
+  letter-spacing: 0;
+  width: 100%;
+  display: block;
+  color: var(--text-muted);
+}
+
+.desktop-nav .dropdown-menu a:hover,
+.desktop-nav .dropdown-menu a:focus-visible {
+  color: var(--accent);
+  background: rgba(48, 60, 86, 0.06);
+}
+
+.desktop-nav .dropdown-menu .all-services-link {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.desktop-nav .dropdown-menu .featured-divider {
+  border-bottom: 1px solid rgba(15, 17, 21, .12);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+}
+
+/* ================= RIGHT ZONE UTILITIES ================= */
+.right-zone {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* DESKTOP PHONE LINK */
+.phone-link {
+  text-decoration: none;
+  color: #FFFFFF;
+  font-size: 0.85rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border-radius: 6px;
+  transition: opacity 0.2s ease;
+  white-space: nowrap;
+}
+
+.phone-link:hover {
+  opacity: 0.85;
+}
+
+.phone-link svg {
+  width: 16px;
+  height: 16px;
+  fill: none;
+  stroke: #FFFFFF;
+  stroke-width: 2.2;
+}
+
+/* Get a quote BUTTON (DESKTOP) */
+.book-btn {
+  text-decoration: none;
+  background: var(--btn-bg);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 10px 20px;
+  border-radius: 50px;
+  border: 2px solid var(--btn-border);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity .25s ease, transform .2s ease;
+}
+
+.book-btn:hover {
+  opacity: 0.9;
+}
+
+.book-btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+/* MENU ICON */
+.menu-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  color: #FFFFFF;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 6px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.menu-icon span {
+  height: 2px;
+  width: 24px;
+  background: #FFFFFF;
+  border-radius: 2px;
+  transition: transform .3s cubic-bezier(0.4, 0, 0.2, 1), opacity .3s ease;
+}
+
+#mainHeader.mobile-open .menu-icon span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+#mainHeader.mobile-open .menu-icon span:nth-child(2) {
+  opacity: 0;
+}
+#mainHeader.mobile-open .menu-icon span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* ================= MOBILE OVERLAY ================= */
+.nav-dropdown {
+  position: fixed;
+  top: 96px;
+  left: 0;
+  width: 100%;
+  height: calc(100vh - 110px);
+  background: var(--bg);
+  padding: 24px;
+  border-radius: 34px;
+  overflow-y: auto;
+  border: 1px solid rgba(15, 17, 21, .12);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-12px);
+  transition: opacity 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.35s ease,
+              top 0.3s ease,
+              height 0.3s ease;
+  pointer-events: none;
+}
+
+#mainHeader.scrolled .nav-dropdown {
+  top: 80px;
+  height: calc(100vh - 92px);
+}
+
+#mainHeader.mobile-open .nav-dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.mobile-utilities {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid rgba(15, 17, 21, .12);
+}
+
+/* MOBILE PHONE BUTTON */
+.mobile-phone-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  padding: 12px 28px;
+  border-radius: 50px;
+  background: rgba(48, 60, 86, 0.06);
+  border: 1px solid var(--steel);
+  color: var(--text);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  transition: background-color 0.25s ease;
+}
+
+.mobile-phone-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.2;
+}
+
+/* Get a quote BUTTON */
+.mobile-book-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  max-width: 320px;
+  padding: 14px 28px;
+  border-radius: 50px;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  color: #FFFFFF;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: background-color 0.25s ease, transform 0.2s ease;
+}
+
+.mobile-book-link:active {
+  transform: scale(0.98);
+  background: var(--accent-hover);
+}
+
+.mobile-book-link svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+}
+
+.nav-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 14px 20px;
+  background: rgba(15, 17, 21, .03);
+  border-radius: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.nav-links a:hover {
+  color: var(--accent);
+  background: rgba(48, 60, 86, 0.08);
+}
+
+/* ACCORDION ANIMATION FOR MOBILE SUBMENUS */
+.nav-links .dropdown-wrapper {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links .has-submenu.open .dropdown-wrapper { 
+  grid-template-rows: 1fr; 
+}
+
+.nav-links .has-submenu.open .arrow-icon { 
+  transform: rotate(180deg); 
+}
+
+.nav-dropdown .dropdown-menu {
+  overflow: hidden;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 0;
+}
+
+.nav-links .has-submenu.open .dropdown-menu { 
+  padding: 8px 0 8px 12px; 
+}
+
+.nav-links .dropdown-menu a {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  text-transform: none;
+  font-weight: 500;
+  background: transparent;
+  border-radius: 10px;
+}
+
+.nav-links .dropdown-menu a:hover {
+  color: var(--accent);
+  background: rgba(48, 60, 86, 0.06);
+}
+
+.nav-links .dropdown-menu .all-services-link {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.nav-links .dropdown-menu .featured-divider {
+  border-bottom: 1px solid rgba(15, 17, 21, .12);
+  padding-bottom: 6px;
+  margin-bottom: 6px;
+}
+
+/* MOBILE SOCIAL LINKS STYLE */
+.nav-socials {
+  display: flex;
+  justify-content: center;
+  list-style: none;
+  margin-top: auto;
+  padding-top: 32px;
+}
+
+.nav-socials .nav-facebook {
+  text-decoration: none;
+  color: var(--text-muted, #555E6D);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  border-radius: 50px;
+  transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.nav-socials .nav-facebook:hover {
+  color: var(--accent, #b81625);
+  background: rgba(48, 60, 86, 0.06);
+}
+
+.nav-socials .nav-facebook svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--accent, #b81625);
+}
+
+/* ================= MEDIA QUERIES ================= */
+@media (max-width: 1390px) {
+  .desktop-nav { display: none; }
+  .right-zone .desktop-only-util { display: none; }
+  #mainHeader {
+    width: calc(100% - 24px);
+    top: 12px;
+  }
+}
+
+@media (min-width: 1391px) {
+  .menu-icon { display: none; }
+  .nav-dropdown { display: none !important; }
+  #mainHeader.scrolled .header-inner {
+    padding-right: 12px;
+  }
+}
+</style>
+
+
+<header id="mainHeader">
+  <div class="header-inner">
+    <a href="index.html" class="logo" aria-label="Home">
+      <img src="images/Logo2.png" class="logo-img" alt="Logo" />
+    </a>
+
+    <nav class="desktop-nav" aria-label="Main Navigation">
+      <ul>
+
+        <li class="has-submenu">
+          <a href="services.html" aria-haspopup="true" aria-expanded="false">Services 
+            <svg class="arrow-icon" viewBox="0 0 448 512" aria-hidden="true"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+          </a>
+          <ul class="dropdown-menu">
+            <li class="featured-divider"><a href="services.html" class="all-services-link">All Services &rarr;</a></li>
+            <li><a href="services.html#driveways">Driveways & Sidewalks</a></li>
+            <li><a href="services.html#decks">Decks & Fencing</a></li>
+            <li><a href="services.html#roof">Roof Softwash</a></li>
+            <li><a href="services.html#siding">Siding & Patios</a></li>
+            <li><a href="services.html#sheds">Sheds & Boat Docks</a></li>
+            <li><a href="services.html#gutters">Gutter Cleaning</a></li>
+            <li><a href="services.html#windows">Window Cleaning</a></li>
+            <li><a href="services.html#commercial">Commercial Cleaning</a></li>
+            <li><a href="services.html#holiday">LED Holiday-lighting</a></li>
+          </ul>
+        </li>
+        <li class="has-submenu">
+          <a href="service-areas.html" aria-haspopup="true" aria-expanded="false">Areas We Serve 
+            <svg class="arrow-icon" viewBox="0 0 448 512" aria-hidden="true"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+          </a>
+          <ul class="dropdown-menu">
+            <li><a href="service-areas.html" class="all-services-link">View All Areas &rarr;</a></li>
+            <li class="featured-divider"><a href="service-areas.html#map" class="all-services-link">Service Area Map &rarr;</a></li>
+            <li><a href="service-areas.html#fredericksburg">Fredericksburg</a></li>
+            <li><a href="service-areas.html#dahlgren">Dahlgren</a></li>
+            <li><a href="service-areas.html#colonial-beach">Colonial Beach</a></li>
+            <li><a href="service-areas.html#stafford">Stafford</a></li>
+            <li><a href="service-areas.html#spotsylvania">Spotsylvania</a></li>
+          </ul>
+        </li>
+        <li><a href="gallery.html">Gallery</a></li>
+        <li><a href="#reviews">Reviews</a></li>
+        <li><a href="about.html">About & FAQ</a></li>
+      </ul>
+    </nav>
+
+    <div class="right-zone">
+      <a href="tel:5403619895" class="phone-link desktop-only-util">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        (540) 361-9895
+      </a>
+
+      <a href="quote.html" rel="noopener noreferrer" class="book-btn desktop-only-util">
+        Get a quote
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <button class="menu-icon" id="menuToggle" aria-label="Toggle Menu" aria-expanded="false">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+  </div>
+
+  <nav class="nav-dropdown" aria-label="Mobile Navigation">
+    <div class="mobile-utilities">
+      <a href="tel:5403619895" class="mobile-phone-link">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+         (540) 361-9895
+      </a>
+
+      <a href="quote.html" rel="noopener noreferrer" class="mobile-book-link">
+        Get a quote
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <ul class="nav-links">
+
+      
+      <li class="has-submenu">
+        <a aria-expanded="false">Services
+          <svg class="arrow-icon" viewBox="0 0 448 512" aria-hidden="true"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+        </a>
+        <div class="dropdown-wrapper"> 
+          <ul class="dropdown-menu">
+            <li class="featured-divider"><a href="services.html" class="mobile-nav-close all-services-link">All Services &rarr;</a></li>
+            <li><a href="services.html#driveways" class="mobile-nav-close">Driveways & Sidewalks</a></li>
+            <li><a href="services.html#decks" class="mobile-nav-close">Decks & Fencing</a></li>
+            <li><a href="services.html#roof" class="mobile-nav-close">Roof Softwash</a></li>
+            <li><a href="services.html#siding" class="mobile-nav-close">Siding & Patios</a></li>
+            <li><a href="services.html#sheds" class="mobile-nav-close">Sheds & Boat Docks</a></li>
+            <li><a href="services.html#gutters" class="mobile-nav-close">Gutter Cleaning</a></li>
+            <li><a href="services.html#windows" class="mobile-nav-close">Window Cleaning</a></li>
+            <li><a href="services.html#holiday" class="mobile-nav-close">LED Holiday-lighting</a></li>
+            <li><a href="services.html#commercial" class="mobile-nav-close">Commercial Cleaning</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li class="has-submenu">
+        <a aria-expanded="false">Areas We Serve
+          <svg class="arrow-icon" viewBox="0 0 448 512" aria-hidden="true"><path d="M201.4 342.6c12.5 12.5 32.8 12.5 45.3 0l160-160c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L224 274.7 86.6 137.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l160 160z"/></svg>
+        </a>
+        <div class="dropdown-wrapper"> 
+          <ul class="dropdown-menu">
+            <li><a href="service-areas.html" class="mobile-nav-close all-services-link">View All Areas &rarr;</a></li>
+            <li class="featured-divider"><a href="service-areas.html#map" class="mobile-nav-close all-services-link">Service Area Map &rarr;</a></li>
+            <li><a href="service-areas.html#fredericksburg" class="mobile-nav-close">Fredericksburg</a></li>
+            <li><a href="service-areas.html#dahlgren" class="mobile-nav-close">Dahlgren</a></li>
+            <li><a href="service-areas.html#colonial-beach" class="mobile-nav-close">Colonial Beach</a></li>
+            <li><a href="service-areas.html#stafford" class="mobile-nav-close">Stafford</a></li>
+            <li><a href="service-areas.html#spotsylvania" class="mobile-nav-close">Spotsylvania</a></li>
+          </ul>
+        </div>
+      </li>
+
+      <li><a href="gallery.html" class="mobile-nav-close">Gallery</a></li>
+      <li><a href="#reviews" class="mobile-nav-close">Reviews</a></li>
+      <li><a href="about.html" class="mobile-nav-close">About & FAQ</a></li>
+    </ul>
+
+    <ul class="nav-socials">
+      <li>
+        <a href="https://www.facebook.com/msrpowerwash/" target="_blank" rel="noopener noreferrer" class="nav-facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Follow us on Facebook
+        </a>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+(function() {
+  const header = document.getElementById('mainHeader');
+  const toggle = document.getElementById('menuToggle');
+  const body = document.body;
+
+  // Header scroll class toggle
+  window.addEventListener('scroll', () => {
+    if (header) {
+      header.classList.toggle('scrolled', window.scrollY > 20);
+    }
+  });
+
+  // Close Mobile Overlay
+  const closeMobileMenu = () => {
+    if (header.classList.contains('mobile-open')) {
+      header.classList.remove('mobile-open');
+      body.classList.remove('lock-scroll');
+      if (toggle) toggle.setAttribute('aria-expanded', 'false');
+    }
+  };
+
+  // Hamburger button toggle
+  if (toggle) {
+    toggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const isOpening = !header.classList.contains('mobile-open');
+      header.classList.toggle('mobile-open');
+      toggle.setAttribute('aria-expanded', isOpening.toString());
+      body.classList.toggle('lock-scroll', isOpening);
+    });
+  }
+
+  // Mobile Dropdown Accordion Toggle
+  const mobileSubmenuLinks = header.querySelectorAll('.nav-links .has-submenu > a');
+  mobileSubmenuLinks.forEach(anchor => {
+    anchor.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const parent = anchor.parentElement;
+      const isOpen = parent.classList.toggle('open');
+      anchor.setAttribute('aria-expanded', isOpen.toString());
+    });
+  });
+
+  // Close mobile menu ONLY when clicking actual destination links
+  const navActionLinks = header.querySelectorAll('.mobile-nav-close');
+  navActionLinks.forEach(link => {
+    link.addEventListener('click', () => {
+      closeMobileMenu();
+    });
+  });
+
+  // Reset menu on resize
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 1390 && header.classList.contains('mobile-open')) {
+      closeMobileMenu();
+    }
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .hero-banner {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 180px);
+    min-height: 420px;
+    overflow: hidden;
+    background-color: #0a0a0a;
+  }
+
+  .hero-slides {
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-slide {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 100px 8% 50px;
+    text-align: left;
+  }
+
+  .hero-slide.active {
+    opacity: 1;
+    visibility: visible;
+    z-index: 1;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+  }
+
+  /* Dark fade strictly on the left behind the text for easy visibility */
+  .hero-slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      90deg,
+      rgba(0, 0, 0, 0.92) 0%,
+      rgba(0, 0, 0, 0.7) 42%,
+      rgba(0, 0, 0, 0) 75%
+    );
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: 620px;
+    margin-left: 0;
+    margin-right: auto;
+    text-align: left;
+    color: var(--text);
+  }
+
+  .hero-headline {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin: 0 0 14px 0;
+    color: #fff;
+    text-align: left;
+  }
+
+  .hero-subline {
+    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+    line-height: 1.5;
+    margin: 0 0 24px 0;
+    color: #efefef;
+    opacity: 0.92;
+    text-align: left;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 14px;
+  }
+
+  .hero-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero-btn:hover {
+    opacity: 0.8;
+  }
+
+  .hero-btn-main {
+    background-color: var(--btn-bg);
+    border: 3px solid var(--btn-border);
+    color: #000;
+  }
+
+  .hero-btn-secondary {
+    background-color: var(--accent);
+    border: 3px solid var(--accent);
+    color: #fff;
+  }
+
+  /* Bottom Center Dots */
+  .hero-dots {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 10px;
+    z-index: 3;
+  }
+
+  .hero-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    background-color: transparent;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.25s ease, transform 0.25s ease;
+  }
+
+  .hero-dot.active {
+    background-color: #fff;
+    transform: scale(1.15);
+  }
+
+  /* Bottom Right Pause/Play Button with Perfect SVG Centering */
+  .hero-pause-btn {
+    position: absolute;
+    bottom: 16px;
+    right: 24px;
+    z-index: 3;
+    background: rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(255, 255, 255, 0.7);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+  }
+
+  .hero-pause-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    display: block;
+  }
+
+  .hero-pause-btn:hover {
+    background: rgba(0, 0, 0, 0.85);
+    border-color: #fff;
+    transform: scale(1.05);
+  }
+
+  @media (max-width: 768px) {
+    .hero-banner {
+      height: calc(100vh - 140px);
+    }
+    
+    .hero-slide {
+      padding: 110px 6% 60px;
+      align-items: flex-end;
+      justify-content: flex-start;
+    }
+
+    .hero-slide::after {
+      background: linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.9) 0%,
+        rgba(0, 0, 0, 0.6) 60%,
+        rgba(0, 0, 0, 0.1) 100%
+      );
+    }
+
+    .hero-pause-btn {
+      bottom: 14px;
+      right: 16px;
+      width: 32px;
+      height: 32px;
+    }
+
+    .hero-pause-btn svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+</style>
+
+<section class="hero-banner" aria-label="Featured Hero Banner">
+  <div class="hero-slides">
+    
+    <!-- Slide 1 -->
+    <div class="hero-slide active">
+      <img src="images/Banner.jpg" alt="Slide 1" class="hero-bg" />
+      <div class="hero-content">
+        <h1 class="hero-headline">MSR Power Washing Fredericksburg, Virginia.</h1>
+        <p class="hero-subline">Professional Exterior Cleaning You Can Trust.</p>
+        <div class="hero-actions">
+          <a href="quote.html" class="hero-btn hero-btn-main">Get a quote</a>
+          <a href="services.html" class="hero-btn hero-btn-secondary">All Services</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide">
+      <img src="images/Banner2.jpg" alt="Slide 2" class="hero-bg" />
+      <div class="hero-content">
+        <h2 class="hero-headline">Permanent Holiday & Outdoor Lighting Installation</h2>
+        <p class="hero-subline">Professionally installed Govee Pro permanent lights invisible by day, brilliant by night, and completely controlled from your phone.</p>
+        <div class="hero-actions">
+          <a href="quote.html" class="hero-btn hero-btn-main">Get a quote</a>
+          <a href="services.html#holiday" class="hero-btn hero-btn-secondary">Learn More</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide">
+      <img src="images/Banner3.jpg" alt="Slide 3" class="hero-bg" />
+      <div class="hero-content">
+        <h2 class="hero-headline">Gutter Cleaning in Fredericksburg, Virginia.</h2>
+        <p class="hero-subline">We clear clogged gutters, and flush downspouts so rainwater flows away from your home.</p>
+        <div class="hero-actions">
+          <a href="quote.html" class="hero-btn hero-btn-main">Get a quote</a>
+          <a href="services.html#gutters" class="hero-btn hero-btn-secondary">Learn More</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Bottom Center Dots -->
+  <div class="hero-dots" role="tablist" aria-label="Slide navigation">
+    <button type="button" class="hero-dot active" aria-label="Go to slide 1" data-slide="0"></button>
+    <button type="button" class="hero-dot" aria-label="Go to slide 2" data-slide="1"></button>
+    <button type="button" class="hero-dot" aria-label="Go to slide 3" data-slide="2"></button>
+  </div>
+
+  <!-- Bottom Right Pause/Play SVG Button -->
+  <button type="button" class="hero-pause-btn" id="heroPauseBtn" aria-label="Pause slideshow" title="Pause slideshow">
+    <!-- Pause Icon SVG -->
+    <svg id="pauseIconSvg" viewBox="0 0 24 24">
+      <rect x="6" y="4" width="4" height="16" rx="1"></rect>
+      <rect x="14" y="4" width="4" height="16" rx="1"></rect>
+    </svg>
+  </button>
+</section>
+
+<script>
+  (function () {
+    const slides = document.querySelectorAll('.hero-slide');
+    const dots = document.querySelectorAll('.hero-dot');
+    const pauseBtn = document.getElementById('heroPauseBtn');
+    let currentIndex = 0;
+    let autoPlayTimer;
+    let isPaused = false;
+
+    // SVG paths for pause and play icons
+    const pauseSvgHTML = '<rect x="6" y="4" width="4" height="16" rx="1"></rect><rect x="14" y="4" width="4" height="16" rx="1"></rect>';
+    const playSvgHTML = '<polygon points="6,4 20,12 6,20"></polygon>';
+
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle('active', i === index);
+      });
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('active', i === index);
+      });
+      currentIndex = index;
+    }
+
+    function nextSlide() {
+      if (!isPaused) {
+        const next = (currentIndex + 1) % slides.length;
+        showSlide(next);
+      }
+    }
+
+    function startTimer() {
+      clearInterval(autoPlayTimer);
+      autoPlayTimer = setInterval(nextSlide, 3000);
+    }
+
+    function resetTimer() {
+      if (!isPaused) {
+        startTimer();
+      }
+    }
+
+    // Dot click events
+    dots.forEach((dot) => {
+      dot.addEventListener('click', () => {
+        const targetIndex = parseInt(dot.getAttribute('data-slide'), 10);
+        showSlide(targetIndex);
+        resetTimer();
+      });
+    });
+
+    // Pause / Play toggle event
+    pauseBtn.addEventListener('click', () => {
+      isPaused = !isPaused;
+      const svgContainer = pauseBtn.querySelector('svg');
+      if (isPaused) {
+        clearInterval(autoPlayTimer);
+        svgContainer.innerHTML = playSvgHTML;
+        pauseBtn.setAttribute('aria-label', 'Play slideshow');
+        pauseBtn.setAttribute('title', 'Play slideshow');
+      } else {
+        startTimer();
+        svgContainer.innerHTML = pauseSvgHTML;
+        pauseBtn.setAttribute('aria-label', 'Pause slideshow');
+        pauseBtn.setAttribute('title', 'Pause slideshow');
+      }
+    });
+
+    startTimer();
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .trust-bar-section {
+    width: 100%;
+    padding: 70px 8%;
+    box-sizing: border-box;
+  }
+
+  .trust-bar-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .trust-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: var(--text);
+    text-decoration: none;
+    transition: opacity 0.2s ease, border-color 0.2s ease;
+  }
+
+  a.trust-card:hover {
+    opacity: 0.85;
+    border-color: var(--accent);
+  }
+
+  .trust-icon {
+    flex-shrink: 0;
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+  }
+
+  .trust-icon svg {
+    width: 30px;
+    height: 30px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .trust-info {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+
+  .trust-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--text);
+  }
+
+  .trust-sub {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    color: var(--text);
+    opacity: 0.78;
+    margin-top: 3px;
+  }
+
+  @media (max-width: 1024px) {
+    .trust-bar-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 580px) {
+    .trust-bar-section {
+      padding: 28px 6%;
+    }
+
+    .trust-bar-grid {
+      grid-template-columns: 1fr;
+      gap: 14px;
+    }
+  }
+</style>
+
+<section class="trust-bar-section" aria-label="Company Trust Highlights">
+  <div class="trust-bar-grid">
+
+    <!-- 1. Facebook Reviews (Clickable Link) -->
+    <a href="https://www.facebook.com/msrpowerwash/reviews" target="_blank" rel="noopener noreferrer" class="trust-card" aria-label="Read our 36 Facebook reviews">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3"></path>
+        </svg>
+      </div>
+      <div class="trust-info">
+        <span class="trust-title">98% Recommend</span>
+        <span class="trust-sub">35+ Facebook Reviews &nearr;</span>
+      </div>
+    </a>
+
+    <!-- 2. Licensed & Insured -->
+    <div class="trust-card">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24">
+          <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          <polyline points="9 12 11 14 15 10"></polyline>
+        </svg>
+      </div>
+      <div class="trust-info">
+        <span class="trust-title">Licensed &amp; Insured</span>
+        <span class="trust-sub">Full Property Protection</span>
+      </div>
+    </div>
+
+    <!-- 3. Veteran-Owned & Family-Operated -->
+    <div class="trust-card">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+      </div>
+      <div class="trust-info">
+        <span class="trust-title">Veteran-Owned</span>
+        <span class="trust-sub">&amp; Family-Operated</span>
+      </div>
+    </div>
+
+    <!-- 4. 10+ Years of Experience -->
+    <div class="trust-card">
+      <div class="trust-icon">
+        <svg viewBox="0 0 24 24">
+          <circle cx="12" cy="8" r="7"></circle>
+          <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline>
+        </svg>
+      </div>
+      <div class="trust-info">
+        <span class="trust-title">10+ Years</span>
+        <span class="trust-sub">Of Experience</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .services-grid-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+
+    color: var(--text);
+
+  }
+
+  .services-header {
+    max-width: 1280px;
+    margin: 0 auto 36px;
+    text-align: left;
+  }
+
+  .services-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 10px 0;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .services-subtext {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 680px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Matches dropdown-menu card surface & border */
+  .service-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(15, 17, 21, 0.12);
+    border-radius: 20px;
+    padding: 0 !important;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .service-card:hover {
+    border-color: var(--btn-border);
+
+  }
+
+ 
+  .service-img-wrap {
+    display: block;
+    width: 100%;
+    height: 220px;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden;
+    background-color: var(--accent);
+    line-height: 0;
+    text-decoration: none;
+  }
+
+  .service-img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    object-fit: cover;
+    display: block;
+  }
+
+  .service-body {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    justify-content: space-between;
+    text-align: left;
+  }
+
+  .service-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.3;
+    margin: 0 0 20px 0;
+    color: var(--text, #0F1115);
+  }
+
+
+  .service-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    align-self: flex-start;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease, transform 0.2s ease;
+  }
+
+  .service-btn:hover {
+    opacity: 0.9;
+  }
+
+  .service-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+
+  .service-card.cta-card {
+    background-color: var(--glass);
+    border: 3px solid var(--btn-border);
+    color: #FFFFFF;
+    justify-content: center;
+    text-align: center;
+	
+
+  }
+
+
+
+  .cta-content {
+    padding: 36px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    text-decoration: none;
+  }
+
+  .cta-icon-badge {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--btn-bg, #63AFAD);
+  }
+
+  .cta-icon-badge svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  .cta-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #FFFFFF;
+    margin: 0 0 10px 0;
+  }
+
+  .cta-desc {
+    font-size: 0.92rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    margin: 0 0 24px 0;
+    line-height: 1.5;
+  }
+
+  .cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 11px 24px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg, #63AFAD);
+    border: 2px solid var(--btn-border, #475C65);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease, transform 0.2s ease;
+  }
+
+  .cta-card:hover .cta-btn {
+    opacity: 0.92;
+  }
+
+  .cta-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  @media (max-width: 1024px) {
+    .services-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .services-grid-section {
+      padding: 40px 6%;
+    }
+
+    .services-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<section class="services-grid-section" aria-label="Our Exterior Cleaning Services">
+  <div class="services-header">
+    <h2 class="services-heading">Our Services</h2>
+    <p class="services-subtext">Complete exterior cleaning and permanent lighting solutions for residential and commercial properties.</p>
+  </div>
+
+  <div class="services-grid">
+
+    <!-- 1. Driveways & Sidewalks -->
+    <article class="service-card">
+      <a href="services.html#driveways" class="service-img-wrap">
+        <img src="images/driveways-sidewalks.jpg" alt="Driveways and Sidewalks Pressure Washing" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Driveways &amp; Sidewalks</h3>
+        <a href="services.html#driveways" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 2. Decks & Fencing -->
+    <article class="service-card">
+      <a href="services.html#decks" class="service-img-wrap">
+        <img src="images/decks-fencing.jpg" alt="Decks and Fencing Cleaning" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Decks &amp; Fencing</h3>
+        <a href="services.html#decks" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 3. Roof Softwash -->
+    <article class="service-card">
+      <a href="services.html#roof" class="service-img-wrap">
+        <img src="images/roof-softwash.jpg" alt="Roof Softwash Service" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Roof Softwash</h3>
+        <a href="services.html#roof" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 4. Siding & Patios -->
+    <article class="service-card">
+      <a href="services.html#siding" class="service-img-wrap">
+        <img src="images/siding-patios.jpg" alt="House Siding and Patio Cleaning" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Siding &amp; Patios</h3>
+        <a href="services.html#siding" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 5. Sheds & Boat Docks -->
+    <article class="service-card">
+      <a href="services.html#sheds" class="service-img-wrap">
+        <img src="images/sheds-docks.jpg" alt="Sheds and Boat Docks Cleaning" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Sheds &amp; Boat Docks</h3>
+        <a href="services.html#sheds" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 6. Gutter Cleaning -->
+    <article class="service-card">
+      <a href="services.html#gutters" class="service-img-wrap">
+        <img src="images/gutter-cleaning.jpg" alt="Gutter Cleaning Service" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Gutter Cleaning</h3>
+        <a href="services.html#gutters" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 7. Commercial Cleaning -->
+    <article class="service-card">
+      <a href="services.html#commercial" class="service-img-wrap">
+        <img src="images/commercial-cleaning.jpg" alt="Commercial Exterior Cleaning" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">Commercial Cleaning</h3>
+        <a href="services.html#commercial" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 8. LED Holiday-lighting -->
+    <article class="service-card">
+      <a href="services.html#holiday" class="service-img-wrap">
+        <img src="images/holiday-lighting.jpg" alt="LED Holiday Lighting Installation" class="service-img" />
+      </a>
+      <div class="service-body">
+        <h3 class="service-title">LED Holiday-lighting</h3>
+        <a href="services.html#holiday" class="service-btn">
+          Learn More
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </article>
+
+    <!-- 9. Distinct See All Services Card -->
+    <article class="service-card cta-card">
+      <a href="services.html" class="cta-content">
+
+        <span class="cta-btn">
+          View All Services
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </span>
+      </a>
+    </article>
+
+  </div>
+</section>
+
+
+
+
+
+
+
+
+<style>
+  .ba-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    font-family: "Montserrat", sans-serif;
+    color: var(--text);
+  }
+
+  /* 6-card Grid (3 columns x 2 rows on desktop) */
+  .ba-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  .ba-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(15, 17, 21, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 10px 28px rgba(6, 43, 48, 0.06);
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+
+
+  /* Interactive Slider Viewport */
+  .ba-viewport {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: pan-y;
+    cursor: ew-resize;
+    background-color: var(--accent);
+    --pos: 50%;
+  }
+
+  .ba-img {
+    position: absolute;
+    inset: 0;
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  /* "Before" photo clipped dynamically by --pos */
+  .ba-img-before {
+    clip-path: inset(0 calc(100% - var(--pos)) 0 0);
+    z-index: 2;
+  }
+
+  /* "After" photo sits underneath */
+  .ba-img-after {
+    z-index: 1;
+  }
+
+  /* Before & After Pill Badges */
+  .ba-badge {
+    position: absolute;
+    top: 14px;
+    z-index: 3;
+    padding: 5px 12px;
+    border-radius: 50px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    pointer-events: none;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .ba-badge-before {
+    left: 14px;
+    background: rgba(15, 17, 21, 0.75);
+    color: #FFFFFF;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+
+  .ba-badge-after {
+    right: 14px;
+    background: var(--glass, #062B30);
+    color: #FFFFFF;
+    border: 1px solid var(--btn-bg);
+  }
+
+  /* Vertical Divider Line & Drag Handle */
+  .ba-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--pos);
+    width: 3px;
+    background-color: #FFFFFF;
+    transform: translateX(-50%);
+    z-index: 4;
+    pointer-events: none;
+    box-shadow: 0 0 12px rgba(6, 43, 48, 0.55);
+  }
+
+  .ba-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--btn-bg);
+    border: 3px solid var(--accent);
+    color: var(--text, #0F1115);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 14px rgba(6, 43, 48, 0.4);
+    transition: transform 0.15s ease, background-color 0.15s ease;
+  }
+
+  .ba-viewport:hover .ba-handle,
+  .ba-viewport.is-dragging .ba-handle {
+    transform: translate(-50%, -50%) scale(1.08);
+  }
+
+  .ba-handle svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  @media (max-width: 1024px) {
+    .ba-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .ba-section {
+      padding: 40px 6%;
+    }
+
+    .ba-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .ba-viewport {
+      height: 260px;
+    }
+  }
+</style>
+
+<section class="ba-section" aria-label="Before and After Project Results">
+  <div class="services-header">
+    <h2 class="services-heading">Before & After</h2>
+
+  </div>
+  <div class="ba-grid">
+
+    <!-- 1. Concrete Driveway -->
+    <article class="ba-card">
+      <div class="ba-viewport" role="slider" tabindex="0" aria-label="Compare before and after Driveway Cleaning" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img src="images/ba-driveway-after.jpg" alt="Clean concrete driveway after pressure washing" class="ba-img ba-img-after" />
+        <img src="images/ba-driveway-before.jpg" alt="Stained concrete driveway before pressure washing" class="ba-img ba-img-before" />
+        <span class="ba-badge ba-badge-before">Before</span>
+        <span class="ba-badge ba-badge-after">After</span>
+        <div class="ba-divider" aria-hidden="true">
+          <div class="ba-handle">
+            <svg viewBox="0 0 24 24"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3"/></svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 2. Roof Softwash -->
+    <article class="ba-card">
+      <div class="ba-viewport" role="slider" tabindex="0" aria-label="Compare before and after Roof Softwash" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img src="images/ba-roof-after.jpg" alt="Clean shingle roof after softwash treatment" class="ba-img ba-img-after" />
+        <img src="images/ba-roof-before.jpg" alt="Algae streaked roof before softwash treatment" class="ba-img ba-img-before" />
+        <span class="ba-badge ba-badge-before">Before</span>
+        <span class="ba-badge ba-badge-after">After</span>
+        <div class="ba-divider" aria-hidden="true">
+          <div class="ba-handle">
+            <svg viewBox="0 0 24 24"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3"/></svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 3. House Siding -->
+    <article class="ba-card">
+      <div class="ba-viewport" role="slider" tabindex="0" aria-label="Compare before and after House Siding Softwash" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <img src="images/ba-siding-after.jpg" alt="Bright vinyl siding after house wash" class="ba-img ba-img-after" />
+        <img src="images/ba-siding-before.jpg" alt="Green algae on vinyl siding before house wash" class="ba-img ba-img-before" />
+        <span class="ba-badge ba-badge-before">Before</span>
+        <span class="ba-badge ba-badge-after">After</span>
+        <div class="ba-divider" aria-hidden="true">
+          <div class="ba-handle">
+            <svg viewBox="0 0 24 24"><path d="M8 9l-3 3 3 3M16 9l3 3-3 3"/></svg>
+          </div>
+        </div>
+      </div>
+    </article>
+
+ 
+
+  </div>
+</section>
+
+<script>
+(function() {
+  const sliders = document.querySelectorAll('.ba-viewport');
+
+  sliders.forEach(slider => {
+    let isDragging = false;
+
+    const updatePosition = (clientX) => {
+      const rect = slider.getBoundingClientRect();
+      let percent = ((clientX - rect.left) / rect.width) * 100;
+      percent = Math.max(0, Math.min(100, percent));
+      slider.style.setProperty('--pos', percent.toFixed(2) + '%');
+      slider.setAttribute('aria-valuenow', Math.round(percent));
+    };
+
+    // Pointer Events (handles Mouse + Touch uniformly)
+    slider.addEventListener('pointerdown', (e) => {
+      isDragging = true;
+      slider.classList.add('is-dragging');
+      slider.setPointerCapture(e.pointerId);
+      updatePosition(e.clientX);
+    });
+
+    slider.addEventListener('pointermove', (e) => {
+      if (!isDragging) return;
+      updatePosition(e.clientX);
+    });
+
+    const stopDragging = (e) => {
+      if (!isDragging) return;
+      isDragging = false;
+      slider.classList.remove('is-dragging');
+      if (slider.hasPointerCapture(e.pointerId)) {
+        slider.releasePointerCapture(e.pointerId);
+      }
+    };
+
+    slider.addEventListener('pointerup', stopDragging);
+    slider.addEventListener('pointercancel', stopDragging);
+
+    // Keyboard Arrow Support for Accessibility
+    slider.addEventListener('keydown', (e) => {
+      const current = parseFloat(slider.getAttribute('aria-valuenow')) || 50;
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const next = Math.max(0, current - 5);
+        slider.style.setProperty('--pos', next + '%');
+        slider.setAttribute('aria-valuenow', next);
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        const next = Math.min(100, current + 5);
+        slider.style.setProperty('--pos', next + '%');
+        slider.setAttribute('aria-valuenow', next);
+      }
+    });
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .reels-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    color: var(--text);
+  }
+
+  .reels-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .reels-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .reels-header-text {
+    text-align: left;
+  }
+
+  .reels-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .reels-controls {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .reels-fb-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .reels-fb-btn:hover {
+    opacity: 0.8;
+  }
+
+  .reels-fb-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+
+  .reels-nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .reel-arrow-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--glass);
+    border: 2px solid var(--btn-border);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .reel-arrow-btn:hover {
+    background-color: var(--accent-hover);
+  }
+
+  .reel-arrow-btn:active {
+    transform: scale(0.95);
+  }
+
+  .reel-arrow-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reels-track-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .reels-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 8px 0 16px 0;
+    box-sizing: border-box;
+  }
+
+  .reels-track::-webkit-scrollbar {
+    display: none;
+  }
+
+  .reel-card {
+    flex: 0 0 267px;
+    width: 267px;
+    height: 476px;
+    scroll-snap-align: start;
+    position: relative;
+    background-color: #111622;
+    border: 2px solid var(--btn-border);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+
+  .reel-iframe {
+    width: 267px;
+    height: 476px;
+    border: none;
+    display: block;
+    background-color: #000;
+  }
+
+
+  .reel-mobile-launcher {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .reels-section {
+      padding: 40px 0;
+    }
+
+    .reels-wrapper {
+      padding: 0 6%;
+    }
+
+    .reels-header {
+      margin-bottom: 18px;
+    }
+
+    .reels-nav-arrows {
+      display: none;
+    }
+
+    .reels-track {
+      gap: 14px;
+      padding: 6px 0 12px 0;
+    }
+
+    .reel-card {
+      flex: 0 0 230px;
+      width: 230px;
+      height: 409px;
+    }
+
+    .reel-iframe {
+      width: 230px;
+      height: 409px;
+      pointer-events: none; 
+    }
+
+
+    .reel-mobile-launcher {
+      position: absolute;
+      inset: 0;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      text-decoration: none;
+      background: linear-gradient(180deg, rgba(0, 0, 0, 0.05) 55%, rgba(0, 0, 0, 0.72) 100%);
+      -webkit-tap-highlight-color: transparent;
+    }
+
+
+    .reel-watch-label {
+      position: absolute;
+      bottom: 14px;
+      color: #ffffff;
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      background: rgba(15, 17, 21, 0.75);
+      padding: 6px 14px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+  }
+</style>
+
+<section class="reels-section" aria-label="Featured Facebook Reels">
+  <div class="reels-wrapper">
+    <div class="reels-header">
+      <div class="reels-header-text">
+        <h2 class="reels-heading">Videos</h2>
+      </div>
+
+      <div class="reels-controls">
+        <a href="https://www.facebook.com/msrpowerwash/reels/" target="_blank" rel="noopener noreferrer" class="reels-fb-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          More Reels
+        </a>
+
+        <div class="reels-nav-arrows">
+          <button type="button" class="reel-arrow-btn" id="reelsPrev" aria-label="Previous Reels">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="reel-arrow-btn" id="reelsNext" aria-label="Next Reels">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reels-track-container">
+      <div class="reels-track" id="reelsTrack">
+        <!-- Reel 1 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F24303035162703264%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 1" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/24303035162703264/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 1 on Facebook">
+          
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 2 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1537709800648755%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 2" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/1537709800648755/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 2 on Facebook">
+      
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 3 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F819709640620749%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 3" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/819709640620749/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 3 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 4 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F3973465059619010%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 4" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/3973465059619010/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 4 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 5 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1935059800457832%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 5" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/1935059800457832/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 5 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 6 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1538575074741776%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 6" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/1538575074741776/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 6 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 7 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1519082056574305%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 7" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/1519082056574305/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 7 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+        <!-- Reel 8 -->
+        <article class="reel-card">
+          <iframe class="reel-iframe" src="https://www.facebook.com/plugins/video.php?height=476&href=https%3A%2F%2Fwww.facebook.com%2Freel%2F1396625232581530%2F&show_text=false&width=267&t=0" width="267" height="476" style="border:none;overflow:hidden" scrolling="no" frameborder="0" allowfullscreen="true" title="Facebook Reel 8" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share; fullscreen"></iframe>
+          <a class="reel-mobile-launcher" href="https://www.facebook.com/reel/1396625232581530/" target="_blank" rel="noopener noreferrer" aria-label="Watch Reel 8 on Facebook">
+
+            <span class="reel-watch-label">Watch Reel</span>
+          </a>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const track = document.getElementById('reelsTrack');
+  const prevBtn = document.getElementById('reelsPrev');
+  const nextBtn = document.getElementById('reelsNext');
+
+  if (!track || !prevBtn || !nextBtn) return;
+
+  const getScrollStep = () => {
+    const firstCard = track.querySelector('.reel-card');
+    return firstCard ? firstCard.offsetWidth + 20 : 287;
+  };
+
+  prevBtn.addEventListener('click', () => {
+    track.scrollBy({ left: -getScrollStep() * 2, behavior: 'smooth' });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    track.scrollBy({ left: getScrollStep() * 2, behavior: 'smooth' });
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .gallery-grid-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    color: var(--text);
+  }
+
+  .gallery-header {
+    max-width: 1280px;
+    margin: 0 auto 36px;
+    text-align: left;
+  }
+
+  .gallery-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 10px 0;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .gallery-subtext {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 680px;
+  }
+
+  .gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Matches service-card surface, border, and radius */
+  .gallery-card {
+    position: relative;
+    background-color: var(--bg-card);
+    border: 1px solid rgba(15, 17, 21, 0.12);
+    border-radius: 20px;
+    padding: 0 !important;
+    overflow: hidden;
+    height: 260px;
+    cursor: pointer;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+  }
+
+  .gallery-card:hover {
+    border-color: var(--btn-border);
+  }
+
+  .gallery-img {
+    width: 100% !important;
+    height: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    border-radius: 0 !important;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+  }
+
+  .gallery-card:hover .gallery-img {
+    transform: scale(1.04);
+  }
+
+  /* Subtle hover overlay with zoom icon */
+  .gallery-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 17, 21, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .gallery-card:hover .gallery-overlay,
+  .gallery-card:focus-visible .gallery-overlay {
+    opacity: 1;
+  }
+
+  .gallery-zoom-badge {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .gallery-zoom-badge svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  /* Bottom CTA Button matching .service-btn / .cta-btn */
+  .gallery-footer {
+    max-width: 1280px;
+    margin: 40px auto 0;
+    text-align: center;
+  }
+
+  .gallery-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 28px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease, transform 0.2s ease;
+  }
+
+  .gallery-cta-btn:hover {
+    opacity: 0.9;
+  }
+
+  .gallery-cta-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  /* Lightbox Modal */
+  .gallery-lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: rgba(15, 17, 21, 0.9);
+    backdrop-filter: blur(6px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .gallery-lightbox.is-open {
+    display: flex;
+  }
+
+  .lightbox-inner {
+    position: relative;
+    max-width: 1000px;
+    max-height: 85vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .lightbox-img {
+    max-width: 100%;
+    max-height: 78vh;
+    border-radius: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.15);
+    object-fit: contain;
+    display: block;
+  }
+
+  .lightbox-caption {
+    margin-top: 14px;
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  .lightbox-btn {
+    position: fixed;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: opacity 0.2s ease;
+    z-index: 10000;
+  }
+
+  .lightbox-btn:hover {
+    opacity: 0.88;
+  }
+
+  .lightbox-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+  }
+
+  .lightbox-close {
+    top: 24px;
+    right: 24px;
+  }
+
+  .lightbox-prev {
+    left: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  .lightbox-next {
+    right: 24px;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @media (max-width: 1024px) {
+    .gallery-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .gallery-grid-section {
+      padding: 40px 6%;
+    }
+
+    .gallery-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .lightbox-prev {
+      left: 12px;
+    }
+
+    .lightbox-next {
+      right: 12px;
+    }
+  }
+</style>
+
+<section class="gallery-grid-section" aria-label="Our Work Gallery">
+  <div class="gallery-header">
+    <h2 class="gallery-heading">Gallery</h2>
+    <p class="gallery-subtext">Power Washing Gallery of our work in the Fredericksburg, VA area.</p>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid">
+    <!-- 1 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View Driveway Pressure Washing photo">
+      <img src="images/gallery-1.jpg" alt="Driveway Pressure Washing Transformation" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+
+    <!-- 2 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View Roof Softwash photo">
+      <img src="images/gallery-2.jpg" alt="Roof Softwash Cleaning Result" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+
+    <!-- 3 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View Deck Restoration photo">
+      <img src="images/gallery-3.jpg" alt="Wood Deck and Fence Cleaning" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+
+    <!-- 4 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View Window wash photo">
+      <img src="images/gallery-4.jpg" alt="Window Wash" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+
+    <!-- 5 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View Brick Stairs Cleaning photo">
+      <img src="images/gallery-5.jpg" alt="Brick Stairs Washing" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+
+    <!-- 6 -->
+    <figure class="gallery-card" tabindex="0" role="button" aria-label="View LED Holiday Lighting photo">
+      <img src="images/gallery-6.jpg" alt="Permanent LED Holiday Lighting Installation" class="gallery-img" />
+      <div class="gallery-overlay">
+        <span class="gallery-zoom-badge">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35M11 8v6M8 11h6"/></svg>
+        </span>
+      </div>
+    </figure>
+  </div>
+
+  <!-- See Full Gallery Button -->
+  <div class="gallery-footer">
+    <a href="gallery.html" class="gallery-cta-btn">
+      See Full Gallery
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</section>
+
+<!-- Lightbox Modal -->
+<div class="gallery-lightbox" id="galleryLightbox" role="dialog" aria-modal="true" aria-label="Image Preview">
+  <button type="button" class="lightbox-btn lightbox-close" id="lightboxClose" aria-label="Close lightbox">
+    <svg viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+
+  <button type="button" class="lightbox-btn lightbox-prev" id="lightboxPrev" aria-label="Previous image">
+    <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+
+  <div class="lightbox-inner">
+    <img src="" alt="" class="lightbox-img" id="lightboxImg" />
+    <p class="lightbox-caption" id="lightboxCaption"></p>
+  </div>
+
+  <button type="button" class="lightbox-btn lightbox-next" id="lightboxNext" aria-label="Next image">
+    <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+</div>
+
+<script>
+  (function () {
+    const cards = Array.from(document.querySelectorAll('#galleryGrid .gallery-card'));
+    const lightbox = document.getElementById('galleryLightbox');
+    const lightboxImg = document.getElementById('lightboxImg');
+    const lightboxCaption = document.getElementById('lightboxCaption');
+    const closeBtn = document.getElementById('lightboxClose');
+    const prevBtn = document.getElementById('lightboxPrev');
+    const nextBtn = document.getElementById('lightboxNext');
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+      currentIndex = (index + cards.length) % cards.length;
+      const img = cards[currentIndex].querySelector('.gallery-img');
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightboxCaption.textContent = img.alt;
+      lightbox.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox() {
+      lightbox.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+
+    cards.forEach((card, index) => {
+      card.addEventListener('click', () => openLightbox(index));
+      card.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openLightbox(index);
+        }
+      });
+    });
+
+    closeBtn.addEventListener('click', closeLightbox);
+    prevBtn.addEventListener('click', () => openLightbox(currentIndex - 1));
+    nextBtn.addEventListener('click', () => openLightbox(currentIndex + 1));
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox) closeLightbox();
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('is-open')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') openLightbox(currentIndex - 1);
+      if (e.key === 'ArrowRight') openLightbox(currentIndex + 1);
+    });
+  })();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .reviews-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    color: var(--text);
+  }
+
+  .reviews-wrapper {
+    max-width: 1280px;
+    margin: 0 auto;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .reviews-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .reviews-header-text {
+    text-align: left;
+  }
+
+  .reviews-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .reviews-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .reviews-ext-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease, transform 0.2s ease;
+    white-space: nowrap;
+  }
+
+  .reviews-ext-btn:hover {
+    opacity: 0.8;
+  }
+
+  .reviews-ext-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+
+  .reviews-nav-arrows {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .review-arrow-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background-color: var(--glass);
+    border: 2px solid var(--btn-border);
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.15s ease;
+  }
+
+  .review-arrow-btn:hover {
+    background-color: var(--accent-hover);
+  }
+
+  .review-arrow-btn:active {
+    transform: scale(0.95);
+  }
+
+  .review-arrow-btn svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .reviews-track-container {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .reviews-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding: 8px 0 16px 0;
+    box-sizing: border-box;
+  }
+
+  .reviews-track::-webkit-scrollbar {
+    display: none;
+  }
+
+ .review-card {
+    flex: 0 0 360px;
+    width: 360px;
+    min-height: 250px;
+    scroll-snap-align: start;
+    position: relative;
+    background-color: var(--bg-card);
+    border: 1px solid rgba(15, 17, 21, 0.12);
+    border-radius: 20px;
+    padding: 24px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; 
+    gap: 18px;
+  }
+
+  .review-card-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .review-author {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .review-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--btn-border);
+    background-color: #1c2436;
+  }
+
+  .review-avatar-initials {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid var(--btn-border);
+    background-color: var(--accent, #1A5D9B);
+    color: #FFFFFF;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.03em;
+    box-sizing: border-box;
+  }
+
+  .review-author-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .review-name {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .review-stars {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    color: #F59E0B;
+  }
+
+  .review-stars svg {
+    width: 15px;
+    height: 15px;
+    fill: currentColor;
+  }
+
+  .review-fb-rec {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text);
+    opacity: 0.85;
+  }
+
+  .review-fb-rec-icon {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #1877F2;
+    color: #FFFFFF;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .review-fb-rec-icon svg {
+    width: 11px;
+    height: 11px;
+    fill: currentColor;
+  }
+
+  .review-source-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    border: 1px solid var(--btn-border);
+    background-color: rgba(255, 255, 255, 0.06);
+    color: var(--text);
+    flex-shrink: 0;
+  }
+
+  .review-source-badge svg {
+    width: 14px;
+    height: 14px;
+    flex-shrink: 0;
+  }
+
+  .review-text {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    color: var(--text);
+    opacity: 0.92;
+  }
+
+  @media (max-width: 768px) {
+    .reviews-section {
+      padding: 40px 0;
+    }
+
+    .reviews-wrapper {
+      padding: 0 6%;
+    }
+
+    .reviews-header {
+      margin-bottom: 18px;
+    }
+
+    .reviews-nav-arrows {
+      display: none;
+    }
+
+    .reviews-track {
+      gap: 14px;
+      padding: 6px 0 12px 0;
+    }
+
+    .review-card {
+      flex: 0 0 295px;
+      width: 295px;
+      min-height: 230px;
+      padding: 20px;
+    }
+  }
+</style>
+
+<section class="reviews-section" aria-label="Customer Reviews" id="reviews">
+  <div class="reviews-wrapper">
+    <div class="reviews-header">
+      <div class="reviews-header-text">
+        <h2 class="reviews-heading">Customer Reviews</h2>
+      </div>
+
+      <div class="reviews-controls">
+        <a href="https://www.facebook.com/msrpowerwash/reviews" target="_blank" rel="noopener noreferrer" class="reviews-ext-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Read All Reviews on FB
+        </a>
+
+        <a href="https://www.google.com/maps/place/MSR+Powerwashing+LLC/@38.2619585,-77.657204,10z/data=!4m15!1m8!3m7!1s0x21592616154e31d9:0xe876801b1fc51215!2sMSR+Powerwashing+LLC!8m2!3d38.2683105!4d-77.4519885!10e5!16s%2Fg%2F11rvg9nz8t!3m5!1s0x21592616154e31d9:0xe876801b1fc51215!8m2!3d38.2683105!4d-77.4519885!16s%2Fg%2F11rvg9nz8t?entry=ttu&g_ep=EgoyMDI2MTExMC4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener noreferrer" class="reviews-ext-btn">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+          Read All Reviews on Google
+        </a>
+
+        <div class="reviews-nav-arrows">
+          <button type="button" class="review-arrow-btn" id="reviewsPrev" aria-label="Previous Reviews">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </button>
+          <button type="button" class="review-arrow-btn" id="reviewsNext" aria-label="Next Reviews">
+            <svg viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="reviews-track-container">
+      <div class="reviews-track" id="reviewsTrack">
+        <!-- Review 1 (Google) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-1.png" alt="Michael Turner" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">KR</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Kelly Robertson</h3>
+                <div class="review-stars" aria-label="5 out of 5 stars">
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                  <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                </div>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Google">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Google
+            </span>
+          </div>
+
+          <p class="review-text">
+            "I’ve used MSR numerous times over the last four years, for power washing, window cleaning and Christmas lights. They’ve done an excellent job each time. Darren and his staff have always been polite and professional."
+          </p>
+        </article>
+
+        <!-- Review 2 (Facebook) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-2.png" alt="Sarah Jenkins" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">BH</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Brandon Hart</h3>
+                <span class="review-fb-rec">
+                  <span class="review-fb-rec-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L15.17 1 8.59 7.59C8.22 7.95 8 8.45 8 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                  </span>
+                  Recommends
+                </span>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </span>
+          </div>
+
+          <p class="review-text">
+            "Highly recommend MSR Power Washing! They did an awesome job installing our permanent outdoor lighting. Everything came out clean, professional, and exactly how we wanted it. Great communication, quality work, and we couldn’t be happier with the finished look!"
+          </p>
+        </article>
+
+        <!-- Review 3 (Facebook) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-3.png" alt="David Miller" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">AH</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Anna Holden</h3>
+                <span class="review-fb-rec">
+                  <span class="review-fb-rec-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L15.17 1 8.59 7.59C8.22 7.95 8 8.45 8 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                  </span>
+                  Recommends
+                </span>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </span>
+          </div>
+
+          <p class="review-text">
+            "Very happy with MSR Power Washing. Efficient, hard working and respectful of the property. Did an amazing job."
+          </p>
+        </article>
+
+
+
+        <!-- Review 4 (Facebook) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-5.png" alt="Chris Reynolds" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">LM</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Leslie A. Mojica</h3>
+                <span class="review-fb-rec">
+                  <span class="review-fb-rec-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L15.17 1 8.59 7.59C8.22 7.95 8 8.45 8 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                  </span>
+                  Recommends
+                </span>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </span>
+          </div>
+
+          <p class="review-text">
+            "MSR, is top notch!! We would recommend them over and over again. Super happy with our house, deck and concrete patio power washing! Super easy to coordinate & book, best customer service for sure!!"
+          </p>
+        </article>
+
+        <!-- Review 5 (Facebook) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-6.png" alt="Jessica Hayes" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">KB</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Kevin Brown</h3>
+                <span class="review-fb-rec">
+                  <span class="review-fb-rec-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L15.17 1 8.59 7.59C8.22 7.95 8 8.45 8 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                  </span>
+                  Recommends
+                </span>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </span>
+          </div>
+
+          <p class="review-text">
+            "Great price, great service. Very pleased with the results. Thorough job well done. Highly recommend this company for your power washing needs."
+          </p>
+        </article>
+		
+		
+		        <!-- Review 6 (Facebook) -->
+        <article class="review-card">
+          <div class="review-card-top">
+            <div class="review-author">
+              <img class="review-avatar" src="images/customer-4.png" alt="Amanda Brooks" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline-flex';">
+              <div class="review-avatar-initials" aria-hidden="true">AW</div>
+              <div class="review-author-info">
+                <h3 class="review-name">Alisha Wenninger</h3>
+                <span class="review-fb-rec">
+                  <span class="review-fb-rec-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24"><path d="M2 21h4V9H2v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L15.17 1 8.59 7.59C8.22 7.95 8 8.45 8 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"/></svg>
+                  </span>
+                  Recommends
+                </span>
+              </div>
+            </div>
+
+            <span class="review-source-badge" aria-label="Reviewed on Facebook">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="#1877F2" d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+              Facebook
+            </span>
+          </div>
+
+          <p class="review-text">
+            "MSR came out quickly for the best price and did a great job on our house, talked to them on Sunday and they were out Tuesday getting our roof and home wash done."
+          </p>
+        </article>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function() {
+  const track = document.getElementById('reviewsTrack');
+  const prevBtn = document.getElementById('reviewsPrev');
+  const nextBtn = document.getElementById('reviewsNext');
+
+  if (!track || !prevBtn || !nextBtn) return;
+
+  const getScrollStep = () => {
+    const firstCard = track.querySelector('.review-card');
+    return firstCard ? firstCard.offsetWidth + 20 : 380;
+  };
+
+  prevBtn.addEventListener('click', () => {
+    track.scrollBy({ left: -getScrollStep(), behavior: 'smooth' });
+  });
+
+  nextBtn.addEventListener('click', () => {
+    track.scrollBy({ left: getScrollStep(), behavior: 'smooth' });
+  });
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  .service-area-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    color: var(--text);
+  }
+
+  .service-area-header {
+    max-width: 1280px;
+    margin: 0 auto 36px;
+    text-align: left;
+  }
+
+  .service-area-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 10px 0;
+    color: var(--accent);
+    letter-spacing: -0.01em;
+  }
+
+  .service-area-subtext {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-muted);
+    max-width: 720px;
+  }
+
+  .service-area-layout {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: 24px;
+    max-width: 1280px;
+    margin: 0 auto;
+    align-items: stretch;
+  }
+
+
+  .area-card {
+    background-color: var(--bg-card);
+    border: 1px solid rgba(15, 17, 21, 0.12);
+    border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: border-color 0.25s ease;
+  }
+
+
+
+  /* Map Container */
+  .area-map-wrap {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    background-color: var(--accent);
+  }
+
+  .area-map-wrap iframe {
+    width: 100%;
+    height: 100%;
+    min-height: 380px;
+    border: 0;
+    display: block;
+  }
+
+  /* City Links Panel */
+  .area-cities-body {
+    padding: 32px 28px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 24px;
+    text-align: left;
+  }
+
+  .area-cities-title {
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1.25;
+    margin: 0 0 8px 0;
+    color: var(--text, #0F1115);
+  }
+
+  .area-cities-desc {
+    font-size: 0.95rem;
+    line-height: 1.55;
+    margin: 0;
+    color: var(--text-muted);
+  }
+
+  .city-links-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .city-link-item a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 11px 16px;
+    border-radius: 50px;
+    background-color: transparent;
+    border: 1.5px solid rgba(15, 17, 21, 0.14);
+    color: var(--text, #0F1115);
+    font-size: 0.9rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+  }
+
+  .city-link-item a:hover {
+    border-color: var(--btn-border);
+    background-color: var(--btn-bg);
+  }
+
+  .city-link-item svg {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2.3;
+  }
+
+  .city-link-item a:hover svg {
+    stroke: var(--text, #0F1115);
+  }
+
+  .area-footer-note {
+    padding-top: 18px;
+    border-top: 1px solid rgba(15, 17, 21, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+  }
+
+  .area-zip-text {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .area-cta-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg, #63AFAD);
+    border: 2px solid var(--btn-border, #475C65);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease;
+  }
+
+  .area-cta-btn:hover {
+    opacity: 0.9;
+  }
+
+  .area-cta-btn svg {
+    width: 14px;
+    height: 14px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  @media (max-width: 1024px) {
+    .service-area-layout {
+      grid-template-columns: 1fr;
+    }
+
+    .area-map-wrap,
+    .area-map-wrap iframe {
+      min-height: 320px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .service-area-section {
+      padding: 40px 6%;
+    }
+
+    .city-links-list {
+      grid-template-columns: 1fr;
+    }
+
+    .area-cities-body {
+      padding: 24px 20px;
+    }
+  }
+</style>
+
+<section class="service-area-section" aria-label="Service Areas and Coverage Map">
+  <div class="service-area-header">
+    <h2 class="service-area-heading">Areas We Serve in Northern &amp; Central Virginia</h2>
+    <p class="service-area-subtext">MSR Powerwashing LLC provides residential and commercial pressure washing, roof softwashing, and permanent LED holiday lighting across Fredericksburg, Stafford, Spotsylvania, and surrounding Virginia communities.</p>
+  </div>
+
+  <div class="service-area-layout">
+    <!-- Left Card: Embedded Google Map centered on MSR Powerwashing LLC (Fredericksburg, VA) -->
+    <div class="area-card">
+      <div class="area-map-wrap">
+        <iframe
+          src="https://maps.google.com/maps?q=MSR%20Powerwashing%20LLC%20Fredericksburg%20VA&t=&z=10&ie=UTF8&iwloc=&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="MSR Powerwashing LLC Service Area Map - Fredericksburg, VA">
+        </iframe>
+      </div>
+    </div>
+
+    <!-- Right Card: Local SEO Virginia City & Community Links -->
+    <nav class="area-card area-cities-body" aria-label="Local Virginia Service Area Pages">
+      <div>
+        <h3 class="area-cities-title">Local Exterior Cleaning &amp; Lighting Near You</h3>
+        <p class="area-cities-desc">Professional pressure washing, roof softwash, gutter cleaning, and LED holiday lighting services in areas bolow.</p>
+      </div>
+
+      <ul class="city-links-list">
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Fredericksburg, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Fredericksburg, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Stafford, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Stafford, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Spotsylvania, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Spotsylvania, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in King George, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>King George, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Locust Grove &amp; Lake of the Woods, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Locust Grove, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Aquia Harbour &amp; Garrisonville, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Aquia Harbour, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Falmouth, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Falmouth, VA</span>
+          </a>
+        </li>
+        <li class="city-link-item">
+          <a href="concept.html" title="Pressure Washing &amp; Softwash in Bowling Green &amp; Ladysmith, VA">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.33-6-10a6 6 0 1 1 12 0c0 4.67-6 10-6 10z"/><circle cx="12" cy="11" r="2.2"/></svg>
+            <span>Bowling Green, VA</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="area-footer-note">
+        <p class="area-zip-text">Also serving Lake of the Woods, Garrisonville, Woodford, and Ladysmith.</p>
+		        <p class="area-zip-text">Don't see your town listed? We travel throughout surrounding counties.</p>
+        <a href="quote.html" class="area-cta-btn">
+          Check Availability
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </nav>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+<style>
+  .cta-banner-section {
+    width: 100%;
+    padding: 60px 8%;
+    box-sizing: border-box;
+    color: var(--text);
+  }
+
+  .cta-banner-card {
+    max-width: 1280px;
+    margin: 0 auto;
+    background-color: var(--glass);
+    border: 3px solid var(--btn-border);
+    border-radius: 20px;
+    padding: 56px 48px;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+    transition: border-color 0.25s ease;
+  }
+
+  .cta-banner-heading {
+    font-size: clamp(1.85rem, 3.2vw, 2.5rem);
+    font-weight: 800;
+    line-height: 1.15;
+    margin: 0 0 14px 0;
+    color: #FFFFFF;
+    letter-spacing: -0.01em;
+    max-width: 720px;
+  }
+
+  .cta-banner-subtext {
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.55;
+    margin: 0 0 32px 0;
+    color: #FFFFFF;
+    opacity: 0.9;
+    max-width: 640px;
+  }
+
+  .cta-banner-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+  }
+
+  .cta-banner-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 28px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: var(--btn-bg);
+    border: 2px solid var(--btn-border);
+    color: var(--text, #0F1115);
+    transition: opacity 0.25s ease;
+  }
+
+  .cta-banner-btn:hover {
+    opacity: 0.9;
+  }
+
+  .cta-banner-btn svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  .cta-banner-phone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 13px 26px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border-radius: 50px;
+    background-color: transparent;
+    border: 2px solid var(--btn-border);
+    color: #FFFFFF;
+    transition: background-color 0.25s ease, color 0.25s ease;
+  }
+
+  .cta-banner-phone:hover {
+    background-color: var(--btn-bg);
+    color: var(--text, #0F1115);
+  }
+
+  .cta-banner-phone svg {
+    width: 15px;
+    height: 15px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.2;
+  }
+
+  @media (max-width: 640px) {
+    .cta-banner-section {
+      padding: 40px 6%;
+    }
+
+    .cta-banner-card {
+      padding: 40px 24px;
+    }
+
+    .cta-banner-actions {
+      width: 100%;
+      flex-direction: column;
+    }
+
+    .cta-banner-btn,
+    .cta-banner-phone {
+      width: 100%;
+      box-sizing: border-box;
+    }
+  }
+</style>
+
+<section class="cta-banner-section" aria-label="Request an Estimate">
+  <div class="cta-banner-card">
+    <h2 class="cta-banner-heading">Ready to Restore Your Property's Curb Appeal?</h2>
+    <p class="cta-banner-subtext">Schedule your residential or commercial pressure washing, roof softwash, or permanent LED holiday lighting service in Fredericksburg, Stafford, and surrounding Virginia communities.</p>
+
+    <div class="cta-banner-actions">
+      <a href="quote.html" class="cta-banner-btn">
+        Get a quote
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+
+      <a href="tel:5403619895" class="cta-banner-phone">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call Now
+      </a>
+    </div>
+  </div>
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+  :root {
+    --bg-light: #f8f9fa;
+    --text-dark: #0F1115;
+    --text-muted: #555E6D;
+    --card-bg: #ffffff;
+    --border: rgba(15, 17, 21, .08);
+    --gold: #f59e0b;
+
+  }
+
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    font-family: "Montserrat", sans-serif;
+
+    line-height: 1.6;
+  }
+
+  
+</style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<style>
+/* ================= FOOTER SYSTEM STYLES ================= */
+.site-footer {
+  background: var(--bg, #FFFFFF);
+  color: var(--text, #0F1115);
+  font-family: "Montserrat", sans-serif;
+  border-top: 1px solid var(--border, rgba(15, 17, 21, .08));
+  padding: 64px 0 32px 0;
+  margin-top: auto;
+}
+
+.footer-inner {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr 1.1fr 1.1fr;
+  gap: 40px;
+}
+
+/* LEFT COLUMN: BRAND & CONTACT INFO */
+.footer-brand {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.footer-logo-img {
+  height: 150px;
+  width: 150px;
+  object-fit: contain;
+  display: block;
+}
+
+.footer-contact-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-phone,
+.footer-email {
+  text-decoration: none;
+  color: var(--text, #0F1115);
+  font-size: 1rem;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.2s ease;
+}
+
+.footer-phone:hover,
+.footer-email:hover {
+  color: var(--accent, #b81625);
+}
+
+.footer-phone svg,
+.footer-email svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--accent, #b81625);
+  fill: none;
+  stroke-width: 2.2;
+}
+
+.footer-address {
+  text-decoration: none;
+  color: var(--text-muted, #555E6D);
+  font-size: 0.88rem;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.4;
+  transition: color 0.2s ease;
+}
+
+.footer-address:hover {
+  color: var(--accent, #b81625);
+}
+
+.footer-address svg {
+  width: 18px;
+  height: 18px;
+  stroke: var(--accent, #b81625);
+  fill: none;
+  stroke-width: 2.2;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.footer-facebook {
+  text-decoration: none;
+  color: var(--text-muted, #555E6D);
+  font-size: 0.9rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: color 0.2s ease;
+}
+
+.footer-facebook:hover {
+  color: var(--accent, #b81625);
+}
+
+.footer-facebook svg {
+  width: 18px;
+  height: 18px;
+  fill: var(--accent, #b81625);
+}
+
+/* BUSINESS HOURS COLUMN */
+.footer-hours {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer-hours-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 0.88rem;
+  color: var(--text-muted, #555E6D);
+}
+
+.footer-hours-list li {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer-hours-list span.day {
+  font-weight: 700;
+  color: var(--text, #0F1115);
+}
+
+/* NAV COLUMNS */
+.footer-column-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text, #0F1115);
+  margin-bottom: 20px;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footer-links a {
+  text-decoration: none;
+  color: var(--text-muted, #555E6D);
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: color 0.2s ease, transform 0.2s ease;
+  display: inline-block;
+}
+
+.footer-links a:hover {
+  color: var(--accent, #b81625);
+  transform: translateX(3px);
+}
+
+/* FEATURED HEADER LINKS STYLING */
+.footer-links .footer-featured-link {
+  font-weight: 700;
+  color: var(--accent, #062B30);
+}
+
+.footer-links .footer-divider {
+  border-bottom: 1px solid var(--border, rgba(15, 17, 21, .12));
+  padding-bottom: 8px;
+  margin-bottom: 6px;
+}
+
+/* CENTERED BOTTOM BAR */
+.footer-bottom {
+  max-width: 1440px;
+  margin: 48px auto 0 auto;
+  padding: 24px 32px 0 32px;
+  border-top: 1px solid var(--border, rgba(15, 17, 21, .08));
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 0.82rem;
+  color: var(--text-muted, #555E6D);
+}
+
+.footer-bottom a {
+  color: inherit;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom a:hover {
+  color: var(--accent, #b81625);
+}
+
+/* RESPONSIVE LAYOUT */
+@media (max-width: 1200px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer-inner {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+</style>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-brand">
+      <a href="index.html" aria-label="Home">
+        <img src="images/Logo.png" class="footer-logo-img" alt="MSR Powerwashing LLC Logo" />
+      </a>
+      
+      <div class="footer-contact-block">
+        <a href="tel:5403619895" class="footer-phone">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          Call Us: (540) 361-9895
+        </a>
+
+        <a href="mailto:msrpowerwashing@gmail.com" class="footer-email">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          msrpowerwashing@gmail.com
+        </a>
+
+        <a href="https://www.google.com/maps/place/MSR+Powerwashing+LLC/@38.2619585,-77.657204,10z/data=!4m15!1m8!3m7!1s0x21592616154e31d9:0xe876801b1fc51215!2sMSR+Powerwashing+LLC!8m2!3d38.2683105!4d-77.4519885!10e5!16s%2Fg%2F11rvg9nz8t!3m5!1s0x21592616154e31d9:0xe876801b1fc51215!8m2!3d38.2683105!4d-77.4519885!16s%2Fg%2F11rvg9nz8t" target="_blank" rel="noopener noreferrer" class="footer-address">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>King George, VA</span>
+        </a>
+
+        <a href="https://www.facebook.com/msrpowerwash/" target="_blank" rel="noopener noreferrer" class="footer-facebook">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+          Follow us on Facebook
+        </a>
+      </div>
+    </div>
+
+    <div class="footer-hours">
+      <h3 class="footer-column-title">Business Hours</h3>
+      <ul class="footer-hours-list">
+        <li>
+          <span class="day">Mon – Fri</span>
+          <span>9:00 AM – 5:00 PM</span>
+        </li>
+        <li>
+          <span class="day">Sat – Sun</span>
+          <span>Closed</span>
+        </li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="footer-column-title">Company</h3>
+      <ul class="footer-links">
+        <li><a href="quote.html" class="footer-featured-link">Get a Quote</a></li>
+        <li><a href="index.html" class="footer-featured-link">Home</a></li>
+        <li><a href="about.html" class="footer-featured-link">About & FAQ</a></li>
+        <li><a href="gallery.html" class="footer-featured-link">Gallery</a></li>
+        <li><a href="#reviews" class="footer-featured-link">Reviews</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="footer-column-title">Services</h3>
+      <ul class="footer-links">
+        <li><a href="services.html" class="footer-featured-link">All Services</a></li>
+        <li><a href="services.html#driveways">Driveways & Sidewalks</a></li>
+        <li><a href="services.html#decks">Decks & Fencing</a></li>
+        <li><a href="services.html#roof">Roof Softwash</a></li>
+        <li><a href="services.html#siding">Siding & Patios</a></li>
+        <li><a href="services.html#sheds">Sheds & Boat Docks</a></li>
+        <li><a href="services.html#gutters">Gutter Cleaning</a></li>
+        <li><a href="services.html#windows">Window Cleaning</a></li>
+        <li><a href="services.html#commercial">Commercial Cleaning</a></li>
+        <li><a href="services.html#holiday">LED Holiday-lighting</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="footer-column-title">Areas We Serve</h3>
+      <ul class="footer-links">
+        <li><a href="service-areas.html" class="footer-featured-link">View All Areas</a></li>
+        <li><a href="service-areas.html#map" class="footer-featured-link">Service Area Map</a></li>
+        <li><a href="service-areas.html#fredericksburg">Fredericksburg</a></li>
+        <li><a href="service-areas.html#dahlgren">Dahlgren</a></li>
+        <li><a href="service-areas.html#colonial-beach">Colonial Beach</a></li>
+        <li><a href="service-areas.html#stafford">Stafford</a></li>
+        <li><a href="service-areas.html#spotsylvania">Spotsylvania</a></li>
+      </ul>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <p>&copy; 2026 MSR Powerwashing LLC. All rights reserved. &bull; <a href="privacy.html">Privacy Policy</a></p>
+    <p>Site by <a href="https://portfolio.stefanswebdesigns.workers.dev/" target="_blank" rel="noopener noreferrer">Stefan's Web Designs</a></p>
+  </div>
+</footer>
+
+
+</body>
+</html>
